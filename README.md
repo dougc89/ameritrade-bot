@@ -22,7 +22,7 @@ When you land on this authorization page, you provide the Ameritrade account cre
 Then you will be redirected to your redirect_uri, with the param code={{authorization_code}} << this authorization code is URL-encoded.
 Decode it: (e.g. https://www.urldecoder.org/), which replaces the special character %codes with their actual characters.
 
-Then: 
+4. 
 Go to the ameritrade helper website: https://developer.tdameritrade.com/authentication/apis/post/token-0
 (They are POSTing to https://api.tdameritrade.com/v1/oauth2/token with the form-urlencoded, but I haven't figured out how to duplicate in Thunderclient yet.)
 | field | value |
@@ -32,6 +32,6 @@ Go to the ameritrade helper website: https://developer.tdameritrade.com/authenti
 | access_type | offline |
 | code | {{the auth code that you just decoded. In its decoded form}} |
 | client_id | {{consumer_key from your app; e.g. UAVZQ82D10TQIQZXYDZ4B5VGKY2NSPLY}} |
-| redirect_uri | https://localhost (matching what you specifired in My Apps, but NOT url-encoded) |
+| redirect_uri | https://localhost (matching what you specified in My Apps, but NOT url-encoded) |
 
 You should get an HTTP status of 200 with the access (valid for 30 mins) and the refresh (valid for 90 days) tokens. Have fun!
