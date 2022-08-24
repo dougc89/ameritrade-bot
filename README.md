@@ -21,10 +21,9 @@ client_id: {{consumer_key}}@AMER.OAUTHAP, where consumer_key is specified under 
 When you land on this authorization page, you provide the Ameritrade account credentials that you would use to log in to https://www.tdameritrade.com/
 Then you will be redirected to your redirect_uri, with the param code={{authorization_code}} << this authorization code is URL-encoded.
 Decode it: (e.g. https://www.urldecoder.org/), which replaces the special character %codes with their actual characters.
-
-4. 
-Go to the ameritrade helper website: https://developer.tdameritrade.com/authentication/apis/post/token-0
+1. Go to the ameritrade helper website: https://developer.tdameritrade.com/authentication/apis/post/token-0
 (They are POSTing to https://api.tdameritrade.com/v1/oauth2/token with the form-urlencoded, but I haven't figured out how to duplicate in Thunderclient yet.)
+
 | field | value |
 | ---   | ---   |
 | grant_type | authorization_code |
