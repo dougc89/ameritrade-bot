@@ -25,11 +25,13 @@ Decode it: (e.g. https://www.urldecoder.org/), which replaces the special charac
 Then: 
 Go to the ameritrade helper website: https://developer.tdameritrade.com/authentication/apis/post/token-0
 (They are POSTing to https://api.tdameritrade.com/v1/oauth2/token with the form-urlencoded, but I haven't figured out how to duplicate in Thunderclient yet.)
-grant_type: authorization_code
-refresh_token: <blank>
-access_type: offline
-code: {{the auth code that you just decoded. In its decoded form}}
-client_id: {{consumer_key from your app; e.g. UAVZQ82D10TQIQZXYDZ4B5VGKY2NSPLY}}
-redirect_uri: https://localhost (matching what you specifired in My Apps, but NOT url-encoded)
+| field | value |
+| ---   | ---   |
+| grant_type | authorization_code |
+| refresh_token | <blank> |
+| access_type | offline |
+| code | {{the auth code that you just decoded. In its decoded form}} |
+| client_id | {{consumer_key from your app; e.g. UAVZQ82D10TQIQZXYDZ4B5VGKY2NSPLY}} |
+| redirect_uri | https://localhost (matching what you specifired in My Apps, but NOT url-encoded) |
 
 You should get an HTTP status of 200 with the access (valid for 30 mins) and the refresh (valid for 90 days) tokens. Have fun!
