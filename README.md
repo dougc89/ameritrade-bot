@@ -34,3 +34,7 @@ Decode it: (e.g. https://www.urldecoder.org/), which replaces the special charac
 | redirect_uri | https://localhost (matching what you specified in My Apps, but NOT url-encoded) |
 
 You should get an HTTP status of 200 with the access (valid for 30 mins) and the refresh (valid for 90 days) tokens. Have fun!
+
+# Mongo Db
+requires the python modules: pymongo and dnspython (install via pip)
+
