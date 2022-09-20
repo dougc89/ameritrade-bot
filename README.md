@@ -7,7 +7,7 @@ This is a casual project by a casual investor, looking to solve the following pr
 * Trading by emotions is a known path to failure in the market. Trading by cold logic will always be better than, as an example, trading by FOMO. Code follows logic with no emotion.
 
 ## What this is not.
-This project is not the work of a professional stock trader. Any actual trades made based on the logic therein come with the risks of stock market investing; namely the loss of investment funds. If you are willing to take the risks, and the possible rewards, then enjoy the game!!
+This project is not the work of a professional stock trader. Any actual trades made based on the logic therein come with the risks of stock market investing; namely the potential loss of investment funds. If you are willing to take the risks, and the possible rewards, then enjoy the game!!
 
 # Authentication
 
