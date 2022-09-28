@@ -5,9 +5,6 @@ class database:
     # we will only interact with one database with this connection
     database = None
 
-    # target collection, set by this.collection
-    # target_collection = None
-
     def __init__(this, database):
 
         # Provide the mongodb atlas url to connect python to mongodb using pymongo
@@ -24,14 +21,7 @@ class database:
         # Create the database for our example (we will use the same database throughout the tutorial
         # print(client[database])
         this.database = client[database]
-
-    def collection(this, target_collection):
-        # get the target collection
-        return this.database[target_collection]
-
-    
-    
-        
+            
 # This is added so that many files can reuse the function get_database()
 if __name__ == "__main__":    
     
