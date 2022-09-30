@@ -58,7 +58,7 @@ class api:
         q = requests.get("https://api.tdameritrade.com/v1/accounts/{account_id}/watchlists".format(account_id = this.account_id), headers=this.auth)
         
         if q.status_code == 200:
-            # print(q.json())
+            print(q.json())
             this.watch_lists_data = q.json()
 
             # set watch list as simplified list of watch list items
