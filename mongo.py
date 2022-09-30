@@ -22,6 +22,9 @@ class database:
         # print(client[database])
         this.database = client[database]
 
+    def connection(this):
+        return this.database
+
     
             
 # This is added so that many files can reuse the function get_database()
@@ -33,8 +36,8 @@ if __name__ == "__main__":
         'symbol': 'TSLA',
         'description': 'Tesla Motors'
     }
-    table = db.collection('watchers')
-    table.insert_one(test_item)
+    table = db.database['watchers']
+    # table.insert_one(test_item)
 
     items = table.find({'symbol':'TSLA'})
 

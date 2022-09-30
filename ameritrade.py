@@ -81,6 +81,18 @@ class api:
         q = requests.get("https://api.tdameritrade.com/v1/marketdata/quotes?symbol={symbol_list}".format(symbol_list = symbol_list), headers=this.auth)
         if q.status_code == 200:
             print(q.json())
+            return q.json()
+        else: 
+            print('issue obtaining stock quotes')
+            return False
+
+    def quote(this, symbol):
+        # symbols is a str, one symbol only. Use this.quotes for list of symbols
+
+        q = requests.get("https://api.tdameritrade.com/v1/marketdata/{symbol}/quotes".format(symbol = symbol), headers=this.auth)
+        if q.status_code == 200:
+            print(q.json())
+            return q.json()
         else: 
             print('issue obtaining stock quotes')
             return False
@@ -91,6 +103,6 @@ if __name__ == "__main__":
     # Get the database
     am = api()
     # print(am.token)
-    print(am.account_info())
-    print(am.watch_lists())
-    print(am.quotes(am.watch_list))
+    # print(am.account_info())
+    # print(am.watch_lists())
+    print(am.quote('AAPL'))
