@@ -1,27 +1,34 @@
 import os, credentials, requests
 
 class api:
-    # we have to init with obtaining a temporary access token, using our refresh token
-    token = None
 
-    # default auth headers, using a Bearer {{token}}
-    auth = {}
 
-    # static ameritrade account identifiers pulled from env, for ease of reference
-    client_id = None
-    account_id = None
 
-    # live account info, read from api
-    account_info_data = None
-    watch_lists_data = None
-    # focused watchlist
-    watch_list = []
+
+
 
 
     def __init__(this):
         # set local version of ameritrade account info
         this.account_id = os.getenv('ameritrade_account_id')
         this.client_id = os.getenv('ameritrade_client_id')
+        # we have to init with obtaining a temporary access token, using our refresh token
+        this.token = None
+
+        # default auth headers, using a Bearer {{token}}
+        this.auth = {}
+
+        # inits:
+        # live account info, read from api
+        this.account_info_data = None
+        this.watch_lists_data = None
+
+        # focused watchlist
+        this.watch_list = []
+
+        # positions dict, which will be parsed from positions_raw list
+        this.positions_raw = []
+        this.positions = {}
 
         # prepare access token request
         auth_config = {'client_id': this.client_id, 'grant_type': 'refresh_token', 'refresh_token': os.getenv('refresh_token')}
@@ -41,17 +48,24 @@ class api:
             return this.account_info_data
 
         # obtain account info via api
-        q = requests.get("https://api.tdameritrade.com/v1/accounts/{account_id}".format(account_id = this.account_id), headers=this.auth)
+        q = requests.get("https://api.tdameritrade.com/v1/accounts/{account_id}?fields=positions,orders".format(account_id = this.account_id), headers=this.auth)
         # print(q.status_code)
         
         if q.status_code == 200:
             # print(q.json())
             this.account_info_data = q.json().get('securitiesAccount')
             # print(this.account_info_data.get('currentBalances'))
-            # set current balances object so that we can recall it later
+
+            # set current_balances, positions, (and orders?) dict's so that we can recall them later
             this.current_balances = this.account_info_data.get('currentBalances')
+            this.positions_raw = this.account_info_data.get('positions')
+            # this.orders << not using right now
+
+            # parse positions data into our preferred format
+            this.process_positions()
+
             return this.account_info_data
-            # return this # for chaining
+
         else: 
             print('issue obtaining account info')
             return False
@@ -99,6 +113,13 @@ class api:
         else: 
             print('issue obtaining stock quotes')
             return False
+
+    def process_positions(this):
+        for position in this.positions_raw:
+            # ignore the cash_equivalent position type
+            if position.get('instrument').get('assetType') != 'CASH_EQUIVALENT':
+                symbol = position.get('instrument').get('symbol')
+                this.positions[symbol] = {'type': position.get('instrument').get('assetType'), 'shares':position.get('longQuantity') , 'value':position.get('marketValue')}
 
 # This is added so that many files can reuse the function get_database()
 if __name__ == "__main__":    

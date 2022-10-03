@@ -108,7 +108,7 @@ class bot_trader:
                 raise Exception("There is not enough $ available to make that purchase.")
 
             # now enforce the fact that we don't want to invest more than 2x the percentage of that stock compared to its peers on the watchlist
-            
+
 
 
         except Exception as err:
@@ -120,4 +120,5 @@ class bot_trader:
 if __name__ == "__main__": 
 
     bot = bot_trader('ameritrade_dev') # if we don't specify live = True, we won't make any actual trades
-    bot.get_watchlist(os.getenv('watchlist_id')).check_watchlist()
+    print(bot.am.positions)
+    # bot.get_watchlist(os.getenv('watchlist_id')).check_watchlist()
