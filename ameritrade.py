@@ -46,7 +46,10 @@ class api:
         
         if q.status_code == 200:
             # print(q.json())
-            this.account_info_data = q.json()
+            this.account_info_data = q.json().get('securitiesAccount')
+            # print(this.account_info_data.get('currentBalances'))
+            # set current balances object so that we can recall it later
+            this.current_balances = this.account_info_data.get('currentBalances')
             return this.account_info_data
             # return this # for chaining
         else: 
@@ -58,7 +61,7 @@ class api:
         q = requests.get("https://api.tdameritrade.com/v1/accounts/{account_id}/watchlists".format(account_id = this.account_id), headers=this.auth)
         
         if q.status_code == 200:
-            print(q.json())
+            # print(q.json())
             this.watch_lists_data = q.json()
 
             # set watch list as simplified list of watch list items
@@ -80,7 +83,7 @@ class api:
 
         q = requests.get("https://api.tdameritrade.com/v1/marketdata/quotes?symbol={symbol_list}".format(symbol_list = symbol_list), headers=this.auth)
         if q.status_code == 200:
-            print(q.json())
+            # print(q.json())
             return q.json()
         else: 
             print('issue obtaining stock quotes')
@@ -91,7 +94,7 @@ class api:
 
         q = requests.get("https://api.tdameritrade.com/v1/marketdata/{symbol}/quotes".format(symbol = symbol), headers=this.auth)
         if q.status_code == 200:
-            print(q.json())
+            # print(q.json())
             return q.json()
         else: 
             print('issue obtaining stock quotes')

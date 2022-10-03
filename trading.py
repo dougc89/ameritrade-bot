@@ -2,10 +2,16 @@ import os, ameritrade, mongo
 
 class bot_trader:
 
-    def __init__(this, database_name):
+    def __init__(this, database_name, live = False):
+
+        # are we making live trades?
+        this.live = live
 
         # init the ameritrade api connection
         this.am = ameritrade.api()
+
+        # init account info (we can call it again later)
+        this.am.account_info()
 
         # init the mongo database connection
         this.db = mongo.database(database_name).connection()
@@ -51,8 +57,11 @@ class bot_trader:
                 for watcher in watch_lookup:
                     # read current price from watchlist_quotes result
                     current_price = this.watchlist_quotes.get(symbol).get('lastPrice')
-                    print("Target buy price for {symbol} is ${target}. Current price is ${current_price}".format(symbol=symbol, target=watcher.get('buy_limit'), current_price = current_price))
-        
+                    target = watcher.get('buy_limit')
+                    print("Target buy price for {symbol} is ${target}. Current price is ${current_price}".format(symbol=symbol, target=target, current_price = current_price))
+                    if current_price < target:
+                        this.evaluate_purchase(symbol)
+
     def init_watchlist_item(this, symbol):
 
         # get the current price of the symbol
@@ -85,7 +94,30 @@ class bot_trader:
         # reduces the next target buy price by 1%, 2%, 4%,... (doubled with each consecutive buy)
         return round( current_price*(1-0.01*pow(2,consecutive_buys)) , 2)
 
+    def evaluate_purchase(this, symbol):
+        # return bool for go ahead with purchase
+        try:
+            # check that we have enough money for the purchase
+            current_price = this.watchlist_quotes.get(symbol).get('lastPrice')
+            cash_available = this.am.current_balances.get('cashAvailableForTrading')
+            # format prices as 2-digit fixed point
+            print("There is ${cash_available:.2f} to purchase {symbol} for ${current_price:.2f}".format(symbol=symbol, cash_available=cash_available, current_price=current_price))
+            
+            # if there is not enough money, fail out
+            if current_price > cash_available:
+                raise Exception("There is not enough $ available to make that purchase.")
+
+            # now enforce the fact that we don't want to invest more than 2x the percentage of that stock compared to its peers on the watchlist
+            
+
+
+        except Exception as err:
+            print(err)
+            return False
+
+    def execute_purchase(this, symbol):
+        return True
 if __name__ == "__main__": 
 
-    bot = bot_trader('ameritrade_dev')
+    bot = bot_trader('ameritrade_dev') # if we don't specify live = True, we won't make any actual trades
     bot.get_watchlist(os.getenv('watchlist_id')).check_watchlist()
