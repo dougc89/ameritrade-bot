@@ -2,18 +2,16 @@ import os, credentials, requests
 
 class api:
 
-
-
-
-
-
-
-    def __init__(this):
+    def __init__(this, refresh_token):
         # set local version of ameritrade account info
         this.account_id = os.getenv('ameritrade_account_id')
         this.client_id = os.getenv('ameritrade_client_id')
+
         # we have to init with obtaining a temporary access token, using our refresh token
         this.token = None
+
+        # the refresh token is passed in, but we will save a new version when needed
+        this.refresh_token = refresh_token
 
         # default auth headers, using a Bearer {{token}}
         this.auth = {}
@@ -31,10 +29,12 @@ class api:
         this.positions = {}
 
         # prepare access token request
-        auth_config = {'client_id': this.client_id, 'grant_type': 'refresh_token', 'refresh_token': os.getenv('refresh_token')}
+        auth_config = {'client_id': this.client_id, 'grant_type': 'refresh_token', 'refresh_token': refresh_token, 'access_type': 'offline'}
         q = requests.post('https://api.tdameritrade.com/v1/oauth2/token', data=auth_config)
         if (q.status_code == 200):
-            this.token = q.json().get('access_token')
+            response = q.json()
+            this.token = response.get('access_token')
+            this.refresh_token = response.get('refresh_token')
             this.auth = {'Authorization': "Bearer {}".format(this.token)}
             # get basic account info
             this.account_info()

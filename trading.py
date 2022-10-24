@@ -7,14 +7,25 @@ class bot_trader:
         # are we making live trades?
         this.live = live
 
+        # init the mongo database connection
+        mongo_db = mongo.database(database_name)
+
+        # just the raw connection, removed from its wrapper 
+        this.db = mongo_db.connection()
+
+        # read the last stored refresh token
+        refresh_token = mongo_db.refresh_token()
+        # print('old refresh token', refresh_token)
+        
         # init the ameritrade api connection
-        this.am = ameritrade.api()
+        this.am = ameritrade.api(refresh_token)
+
+        # set the new refresh token, after we authenticated and got a new one
+        # print('new refresh token', this.am.refresh_token)
+        mongo_db.refresh_token(this.am.refresh_token)
 
         # init account info (we can call it again later)
         this.am.account_info()
-
-        # init the mongo database connection
-        this.db = mongo.database(database_name).connection()
 
         # watchlist (default empty list)
         this.watchlist = []
